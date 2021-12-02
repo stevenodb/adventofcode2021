@@ -6,21 +6,15 @@ fun main() {
         Command(valueOf(split[0].uppercase()), split[1].toInt())
     }
 
-    val pos1 = partOne(input)
+    val pos1 = commandSub(input, Position())
     println("Part1: $pos1 == ${pos1.depth * pos1.horizontal}")
 
-    val pos2 = partTwo(input)
+    val pos2 = commandSub(input, AimPosition())
     println("Part2: $pos2 == ${pos2.depth * pos2.horizontal}")
 }
 
-private fun partOne(input: List<Command>): Position {
-    var position = Position()
-    input.forEach { position = it.move(position) }
-    return position
-}
-
-private fun partTwo(input: List<Command>): Position {
-    var position: Position = AimPosition()
+private fun commandSub(input: List<Command>, start: Position): Position {
+    var position = start
     input.forEach { position = it.move(position) }
     return position
 }
