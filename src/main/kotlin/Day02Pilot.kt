@@ -26,7 +26,7 @@ open class Position(val horizontal: Int = 0, val depth: Int = 0) {
     override fun toString(): String = "Position(horizontal=$horizontal, depth=$depth)"
 }
 
-class AimPosition(horizontal: Int = 0, depth: Int = 0, val aim: Int = 0) : Position(horizontal, depth) {
+class AimPosition(horizontal: Int = 0, depth: Int = 0, private val aim: Int = 0) : Position(horizontal, depth) {
     override fun forward(units: Int): AimPosition = AimPosition(horizontal + units, depth + (aim * units), aim)
     override fun down(units: Int): AimPosition = AimPosition(horizontal, depth, aim + units)
     override fun up(units: Int): AimPosition = down(-units)

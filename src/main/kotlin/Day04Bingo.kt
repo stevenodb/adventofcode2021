@@ -1,3 +1,4 @@
+import kotlin.math.pow
 import kotlin.math.sqrt
 
 fun main() {
@@ -24,7 +25,7 @@ private fun parseBoards(iterator: Iterator<String>): MutableList<Board> {
         val boardLine = line.trim().split(Regex("\\s+")).map { it.toInt() }.toMutableList()
         boardLines.addAll(boardLine)
 
-        if (boardLines.size == 5 * 5) {
+        if (boardLines.size == boardLine.size.toDouble().pow(2).toInt()) {
             boards.add(Board(boardLines))
             boardLines = mutableListOf()
         }
