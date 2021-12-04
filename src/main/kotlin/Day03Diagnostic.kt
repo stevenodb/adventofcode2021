@@ -14,15 +14,16 @@ fun main() {
 internal fun reduceToCommonBits(numberOfBits: Int, ints: List<Int>): List<Int> {
     val bitCount = Array(numberOfBits) { 0 }
     for (i in 0 until numberOfBits) {
-        val pow = 2 `**` i
+        val pow = 2 `**` (numberOfBits-1)-i
         for (int in ints) {
             bitCount[i] += (int and pow) / pow
         }
     }
-    return bitCount.map { if (it >= ints.size / 2) 1 else 0 }.reversed()
+    return bitCount.map { if (it >= ints.size / 2) 1 else 0 }
 }
 
 private fun List<Int>.bitwiseToInteger() =
     reduceRightIndexed { index, int, acc -> acc or (int * (2 `**` (this.size-1)-index)) }
 
+@Suppress("DANGEROUS_CHARACTERS")
 private infix fun Int.`**`(i: Int) = this.toDouble().pow(i).toInt()
