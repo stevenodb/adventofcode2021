@@ -20,7 +20,7 @@ internal class Day03DiagnosticKtTest {
             "00010",
             "01010"
         )
-        val actual = reduceToCommonBits(5, input.map { it.toInt(2) })
+        val actual = reduceToCommonBits(input)
         expectThat(actual).isEqualTo(listOf(1,0,1,1,0))
     }
 }

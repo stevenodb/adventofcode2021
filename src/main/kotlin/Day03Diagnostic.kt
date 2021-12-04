@@ -1,29 +1,21 @@
-import kotlin.math.pow
-
 fun main() {
     val input = readInput("Day03")
-    val numberOfBits = input.first().length
 
-    val bitResult = reduceToCommonBits(numberOfBits, input.map { it.toInt(2) })
-    val result = bitResult.bitwiseToInteger()
-    val invResult = bitResult.map { if (it == 0) 1 else 0 }.bitwiseToInteger()
+    val bitResult = reduceToCommonBits(input)
+    val result = bitResult.joinToString("").toInt(2)
+    val invResult = bitResult.map { if (it == 0) 1 else 0 }.joinToString("").toInt(2)
 
     println("$result * $invResult = ${result * invResult}")
 }
 
-internal fun reduceToCommonBits(numberOfBits: Int, ints: List<Int>): List<Int> {
-    val bitCount = Array(numberOfBits) { 0 }
-    for (i in 0 until numberOfBits) {
-        val pow = 2 `**` (numberOfBits-1)-i
-        for (int in ints) {
-            bitCount[i] += (int and pow) / pow
+fun reduceToCommonBits(bitNumbers: List<String>): List<Int> {
+    val bitCount = bitNumbers.first().length
+
+    val countOnes = Array(bitCount) { 0 }
+    for (number in bitNumbers) {
+        for (bit in 0 until bitCount) {
+            countOnes[bit] += if (number[bit] == '1') 1 else 0
         }
     }
-    return bitCount.map { if (it >= ints.size / 2) 1 else 0 }
+    return countOnes.map { if (it >= bitNumbers.size / 2) 1 else 0 }
 }
-
-private fun List<Int>.bitwiseToInteger() =
-    reduceRightIndexed { index, int, acc -> acc or (int * (2 `**` (this.size-1)-index)) }
-
-@Suppress("DANGEROUS_CHARACTERS")
-private infix fun Int.`**`(i: Int) = this.toDouble().pow(i).toInt()
