@@ -23,6 +23,6 @@ internal fun reduceToCommonBits(numberOfBits: Int, ints: List<Int>): List<Int> {
 }
 
 private fun List<Int>.bitwiseToInteger() =
-    this.reversed().reduceIndexed { index, acc, int -> println(index); acc or (int * (2 `**` index)) }
+    reduceRightIndexed { index, int, acc -> acc or (int * (2 `**` (this.size-1)-index)) }
 
 private infix fun Int.`**`(i: Int) = this.toDouble().pow(i).toInt()
