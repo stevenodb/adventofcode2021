@@ -19,9 +19,8 @@ fun fishWoohoo(numDays: Int, fishCountsInput: Map<Int, Int>): ULong {
         for (key in 1..8) {
             fishCounts[key - 1] = fishCounts[key] ?: 0uL
         }
-        fishCounts.remove(8)
         fishCounts[6] = (fishCounts[6] ?: 0uL) + zeroFishCount
-        fishCounts[8] = (fishCounts[8] ?: 0uL) + zeroFishCount
+        fishCounts[8] = zeroFishCount
     }
     return fishCounts.values.sum()
 }
