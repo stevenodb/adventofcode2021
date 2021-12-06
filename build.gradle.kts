@@ -27,20 +27,7 @@ tasks.withType<KotlinCompile>() {
 }
 
 tasks {
-//    sourceSets {
-//        main {
-//            java.srcDirs("src/main/kotlin")
-//        }
-//        test {
-//            java.srcDirs("src/test/kotlin")
-//        }
-//    }
-
     wrapper {
         gradleVersion = "7.3.1"
     }
-}
-
-application {
-    mainClass.set("MainKt")
 }
