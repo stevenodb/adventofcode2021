@@ -11,7 +11,7 @@ internal fun optimalFuelPart1(positions: List<Int>): Map.Entry<Int, Int>? =
     optimalFuel(positions) { it }
 
 internal fun optimalFuelPart2(positions: List<Int>): Map.Entry<Int, Int>? =
-    optimalFuel(positions) { d -> (1 + d) * d / 2 }
+    optimalFuel(positions) { d -> (1 + d) * d / 2 } // sum of an arithmetic sequence: (a1 + an) * n/2
 
 private fun optimalFuel(positions: List<Int>, fuelFunction: (Int) -> Int): Map.Entry<Int, Int>? {
     val min = positions.minOrNull() ?: 0
