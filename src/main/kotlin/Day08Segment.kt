@@ -41,7 +41,7 @@ fun main() {
             .map { value -> toDigit(value) }
             .joinToString("").toInt()
     }.sum()
-    println(sum)
+    println("Part2 : $sum")
 }
 
 internal fun countUniqueDigits(input: List<List<String>>): Int {
