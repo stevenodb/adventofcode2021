@@ -18,12 +18,13 @@ private fun <T : Comparable<T>> List<List<T>>.isLowPoint(x: Int, y: Int, current
             .filterNot { ix -> ((ix != 0) && (iy != 0)) }
             .filterNot { ix -> ((ix == 0) && (iy == 0)) }
             .forEach { ix ->
-                getOrNull(y + iy)?.getOrNull(x + ix)?.let { adjacentHeight: T ->
-                    if (currentHeight < adjacentHeight) {
-                        adjacentHeights.add(adjacentHeight)
+                getOrNull(y + iy)?.getOrNull(x + ix)
+                    ?.let { adjacentHeight ->
+                        if (currentHeight < adjacentHeight) {
+                            adjacentHeights.add(adjacentHeight)
+                        }
+                        adjacentCount++
                     }
-                    adjacentCount++
-                }
             }
     }
     return adjacentHeights.size == adjacentCount
