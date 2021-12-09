@@ -17,13 +17,11 @@ private fun optimalFuel(positions: List<Int>, fuelFunction: (Int) -> Int): Map.E
     val min = positions.minOrNull() ?: 0
     val max = positions.maxOrNull() ?: 0
 
-    val result = (min..max)
-        .associateWith { p_target ->
-            positions.sumOf { p_start: Int ->
-                val d = abs(p_start - p_target)
-                fuelFunction.invoke(d)
-            }
+    return (min..max).associateWith { p_target ->
+        positions.sumOf { p_start: Int ->
+            val d = abs(p_start - p_target)
+            fuelFunction.invoke(d)
         }
+    }
         .entries.minByOrNull { it.value }
-    return result
 }
