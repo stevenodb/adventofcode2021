@@ -4,10 +4,11 @@ fun main() {
 }
 
 fun determineRiskLevels(heightMap: List<List<Int>>): Int {
-    val lowPoints =
-        heightMap.flatMapIndexed { y, row -> row.filterIndexed { x, height -> heightMap.isLowPoint(x, y, height) } }
-    return lowPoints.sumOf { it + 1 }
+    return findLowPoints(heightMap).sumOf { it + 1 }
 }
+
+private fun findLowPoints(heightMap: List<List<Int>>) =
+    heightMap.flatMapIndexed { y, row -> row.filterIndexed { x, height -> heightMap.isLowPoint(x, y, height) } }
 
 private fun <T : Comparable<T>> List<List<T>>.isLowPoint(x: Int, y: Int, currentHeight: T): Boolean {
     var adjacentCount = 0
