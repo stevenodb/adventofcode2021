@@ -4,28 +4,34 @@ import strikt.assertions.containsExactly
 import strikt.assertions.isEqualTo
 
 internal class Day10ChunkKtTest {
+    private val input = listOf(
+        "[({(<(())[]>[[{[]{<()<>>",
+        "[(()[<>])]({[<{<<[]>>(",
+        "{([(<{}[<>[]}>{[]{[(<()>",
+        "(((({<>}<{<{<>}{[]{[]{}",
+        "[[<[([]))<([[{}[[()]]]",
+        "[{[{({}]{}}([{[{{{}}([]",
+        "{<[[]]>}<{[{[{[]{()[[[]",
+        "[<(<(<(<{}))><([]([]()",
+        "<{([([[(<>()){}]>(<<{{",
+        "<{([{{}}[<[[[<>{}]]]>[]]"
+    )
+
     @Test
     fun parseChunks() {
-        val input = listOf(
-            "[({(<(())[]>[[{[]{<()<>>",
-            "[(()[<>])]({[<{<<[]>>(",
-            "{([(<{}[<>[]}>{[]{[(<()>",
-            "(((({<>}<{<{<>}{[]{[]{}",
-            "[[<[([]))<([[{}[[()]]]",
-            "[{[{({}]{}}([{[{{{}}([]",
-            "{<[[]]>}<{[{[{[]{()[[[]",
-            "[<(<(<(<{}))><([]([]()",
-            "<{([([[(<>()){}]>(<<{{",
-            "<{([{{}}[<[[[<>{}]]]>[]]"
-        )
-
-        val invalidBracket = validateChunks(input)
-        expectThat(invalidBracket).containsExactly('}', ')', ']', ')', '>')
+        expectThat(validateChunks(input))
+            .containsExactly('}', ')', ']', ')', '>')
     }
 
     @Test
     fun scoreInvalidChars() {
-        val actualScore = scoreInvalidChars(listOf('}', ')', ']', ')', '>'))
-        expectThat(actualScore).isEqualTo(26397)
+        expectThat(scoreInvalidChars(listOf('}', ')', ']', ')', '>')))
+            .isEqualTo(26397)
+    }
+
+    @Test
+    fun scoreCompletionChunks() {
+        expectThat(scoreCompletionChunkPieces(input))
+            .isEqualTo(288957)
     }
 }
