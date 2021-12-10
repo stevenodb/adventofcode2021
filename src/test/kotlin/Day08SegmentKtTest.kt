@@ -36,9 +36,4 @@ internal class Day08SegmentKtTest {
         expectThat(actual).isEqualTo(
             mapOf('d' to 'a', 'e' to 'b', 'a' to 'c', 'f' to 'd', 'g' to 'e', 'b' to 'f', 'c' to 'g'))
     }
-
-    @Test
-    fun transform() {
-        TODO("Not yet implemented")
-    }
 }
