@@ -11,7 +11,6 @@ fun scoreCompletionChunkPieces(input: List<String>): Long {
     val scores = input
         .asSequence()
         .filter { errorInChunk(it) == null }
-        .toList()
         .map { determineMissingChunkPiece(it) }
         .map { scoreCompletion(it) }
         .sorted()
@@ -19,7 +18,7 @@ fun scoreCompletionChunkPieces(input: List<String>): Long {
     return scores[ceil(scores.size / 2.0).toInt() - 1]
 }
 
-internal fun determineMissingChunkPiece(brackets: String): List<Char> {
+private fun determineMissingChunkPiece(brackets: String): List<Char> {
     val openingStack = Stack<Bracket>()
     brackets.map { char -> Bracket(char) }
         .forEach { currentBracket ->
