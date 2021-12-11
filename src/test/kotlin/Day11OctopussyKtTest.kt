@@ -18,7 +18,11 @@ internal class Day11OctopussyKtTest {
 
     @Test
     fun flashCount() {
-        expectThat(countFlashes(input))
-            .isEqualTo(1656)
+        expectThat(flashCountAfter100Steps(input)).isEqualTo(1656)
+    }
+
+    @Test
+    fun numberOfStepsToSynchroFlash() {
+        expectThat(numberOfStepsToSynchroFlash(input)).isEqualTo(195)
     }
 }
