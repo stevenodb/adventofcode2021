@@ -3,9 +3,8 @@ import strikt.api.expectThat
 import strikt.assertions.isEqualTo
 
 internal class Day12PathFfingFindingKtTest {
-    @Test
-    fun findAllPaths_scenario19() {
-        val input = listOf(
+    private val smallInput = parseInput(
+        listOf(
             "dc-end",
             "HN-start",
             "start-kj",
@@ -17,16 +16,10 @@ internal class Day12PathFfingFindingKtTest {
             "kj-HN",
             "kj-dc"
         )
+    )
 
-        val connectionMap = parseInput(input)
-        val allPaths = findAllPaths(connectionMap, "start")
-        printPaths(allPaths)
-        expectThat(allPaths.size).isEqualTo(19)
-    }
-
-    @Test
-    fun findAllPaths_scenario226() {
-        val input = listOf(
+    private val biggerInput = parseInput(
+        listOf(
             "fs-end",
             "he-DX",
             "fs-he",
@@ -46,10 +39,29 @@ internal class Day12PathFfingFindingKtTest {
             "pj-fs",
             "start-RW",
         )
+    )
 
-        val connectionMap = parseInput(input)
-        val allPaths = findAllPaths(connectionMap, "start")
+    @Test
+    fun findAllPaths_scenarioSmall() {
+        val allPaths = findAllPaths(smallInput, "start")
+        expectThat(allPaths.size).isEqualTo(19)
+    }
+
+    @Test
+    fun findAllPaths_scenarioBigger() {
+        val allPaths = findAllPaths(biggerInput, "start")
         expectThat(allPaths.size).isEqualTo(226)
-        printPaths(allPaths)
+    }
+
+    @Test
+    internal fun findAllPaths_withRepeated_small() {
+        val allPaths = findAllPaths(smallInput, "start", true)
+        expectThat(allPaths.size).isEqualTo(103)
+    }
+
+    @Test
+    internal fun findAllPaths_withRepeated_bigger() {
+        val allPaths = findAllPaths(biggerInput, "start", true)
+        expectThat(allPaths.size).isEqualTo(3509)
     }
 }

@@ -15,8 +15,8 @@ internal fun parseInput(strings: List<String>) =
 fun findAllPaths(
     connections: Map<String, List<String>>,
     node: String,
-    path: List<String> = listOf(),
-    allowRepeatedLowerCase: Boolean = false
+    allowRepeatedLowerCase: Boolean = false,
+    path: List<String> = listOf()
 ): MutableList<List<String>> {
     if (node == "end") return mutableListOf(path.plus(node))
     val nextNodes = connections[node] ?: return mutableListOf()
@@ -27,7 +27,7 @@ fun findAllPaths(
         when {
             moreThanOneStartGiven(nextNode, newPath) -> return@forEach
             moreThanOneRepeatedLowerCaseNodeGiven(nextNode, newPath, allowRepeatedLowerCase) -> return@forEach
-            else -> foundPaths.addAll(findAllPaths(connections, nextNode, newPath, allowRepeatedLowerCase))
+            else -> foundPaths.addAll(findAllPaths(connections, nextNode, allowRepeatedLowerCase, newPath))
         }
     }
     return foundPaths
@@ -38,13 +38,14 @@ private fun moreThanOneStartGiven(nextNode: String, path: List<String>) = nextNo
 private fun moreThanOneRepeatedLowerCaseNodeGiven(
     nextNode: String, nextPath: List<String>, allowRepeatedLowerCase: Boolean
 ): Boolean {
-    if (!nextNode.isLowerCase()) return false
-    if (nextNode !in nextPath) return false
-    if (allowRepeatedLowerCase) {
-        return nextPath.count { it == nextNode } in 1..2 && nextPath.filter { it.isLowerCase() }
-            .any { node -> nextPath.count { it == node } > 1 }
+    return when {
+        !nextNode.isLowerCase() -> false
+        allowRepeatedLowerCase -> {
+            nextPath.count { it == nextNode } in 1..2 && nextPath.filter { it.isLowerCase() }
+                .any { node -> nextPath.count { it == node } > 1 }
+        }
+        else -> nextNode in nextPath
     }
-    return nextNode.isLowerCase() && nextNode in nextPath
 }
 
 private fun String.isLowerCase() = all { char -> char.isLowerCase() }
