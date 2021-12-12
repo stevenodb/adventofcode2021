@@ -23,9 +23,10 @@ fun findAllPaths(
     val newPath = path.plus(node)
     val foundPaths = mutableListOf<List<String>>()
     nextNodes.forEach { nextNode ->
-        if (!(nextNode.isLowerCase() && nextNode in path)) {
-            foundPaths.addAll(findAllPaths(connections, nextNode, newPath))
-        }
+        if ((nextNode.isLowerCase() && nextNode in path)) return@forEach
+
+        foundPaths.addAll(findAllPaths(connections, nextNode, newPath))
+
     }
     return foundPaths
 }
