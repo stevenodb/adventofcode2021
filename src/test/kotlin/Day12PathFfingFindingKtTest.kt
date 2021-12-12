@@ -20,8 +20,8 @@ internal class Day12PathFfingFindingKtTest {
 
         val connectionMap = parseInput(input)
         val allPaths = findAllPaths(connectionMap, "start")
-        expectThat(allPaths.size).isEqualTo(19)
         printPaths(allPaths)
+        expectThat(allPaths.size).isEqualTo(19)
     }
 
     @Test

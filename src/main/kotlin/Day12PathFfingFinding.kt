@@ -1,8 +1,7 @@
 fun main() {
     val input = parseInput(readInput("Day12"))
-    val allPaths = findAllPaths(input, "start")
-//    printPaths(allPaths)
-    println("Part 1: ${allPaths.size}")
+    println("Part 1: ${findAllPaths(input, "start").size}")
+    println("Part 2: ${findAllPaths(input, "start", allowRepeatedLowerCase = true).size}")
 }
 
 internal fun printPaths(paths: List<List<String>>) {
@@ -10,12 +9,14 @@ internal fun printPaths(paths: List<List<String>>) {
 }
 
 internal fun parseInput(strings: List<String>) =
-    strings.map { line -> line.split('-') }
-        .flatMap { listOf(it.toFirstLastPair(), it.toFirstLastPair().reversed()) }
+    strings.map { line -> line.split('-') }.flatMap { listOf(it.toFirstLastPair(), it.toFirstLastPair().reversed()) }
         .groupBy({ it.first }, { it.second })
 
 fun findAllPaths(
-    connections: Map<String, List<String>>, node: String, path: List<String> = listOf()
+    connections: Map<String, List<String>>,
+    node: String,
+    path: List<String> = listOf(),
+    allowRepeatedLowerCase: Boolean = false
 ): MutableList<List<String>> {
     if (node == "end") return mutableListOf(path.plus(node))
     val nextNodes = connections[node] ?: return mutableListOf()
@@ -23,12 +24,27 @@ fun findAllPaths(
     val newPath = path.plus(node)
     val foundPaths = mutableListOf<List<String>>()
     nextNodes.forEach { nextNode ->
-        if ((nextNode.isLowerCase() && nextNode in path)) return@forEach
-
-        foundPaths.addAll(findAllPaths(connections, nextNode, newPath))
-
+        when {
+            moreThanOneStartGiven(nextNode, newPath) -> return@forEach
+            moreThanOneRepeatedLowerCaseNodeGiven(nextNode, newPath, allowRepeatedLowerCase) -> return@forEach
+            else -> foundPaths.addAll(findAllPaths(connections, nextNode, newPath, allowRepeatedLowerCase))
+        }
     }
     return foundPaths
+}
+
+private fun moreThanOneStartGiven(nextNode: String, path: List<String>) = nextNode == "start" && nextNode in path
+
+private fun moreThanOneRepeatedLowerCaseNodeGiven(
+    nextNode: String, nextPath: List<String>, allowRepeatedLowerCase: Boolean
+): Boolean {
+    if (!nextNode.isLowerCase()) return false
+    if (nextNode !in nextPath) return false
+    if (allowRepeatedLowerCase) {
+        return nextPath.count { it == nextNode } in 1..2 && nextPath.filter { it.isLowerCase() }
+            .any { node -> nextPath.count { it == node } > 1 }
+    }
+    return nextNode.isLowerCase() && nextNode in nextPath
 }
 
 private fun String.isLowerCase() = all { char -> char.isLowerCase() }
