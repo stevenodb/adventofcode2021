@@ -2,7 +2,7 @@ import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
 
-internal class Day6WoohooKtTest {
+internal class Day06WoohooKtTest {
 
     @Test
     internal fun fishWoohoo_scenario() {
