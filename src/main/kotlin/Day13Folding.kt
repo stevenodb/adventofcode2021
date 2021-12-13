@@ -21,15 +21,16 @@ fun foldPaper(dots: List<Point>, folds: List<Paper.Fold>): Paper {
 internal fun parseFoldInput(lines: List<String>): Pair<List<Point>, List<Paper.Fold>> {
     val separatorIndex = lines.indexOf("")
     val dots = lines.subList(0, separatorIndex).map { it.split(",") }.map { Point(it[0].toInt(), it[1].toInt()) }
-    val folds = lines.subList(separatorIndex + 1, lines.size)
+    val folds = lines.subList(separatorIndex, lines.size)
         .map { line ->
             line.split("fold along ", "=")
                 .filterNot { it.isEmpty() }
         }
-        .map { val fold = Paper.Fold(valueOf(it[0].trim().uppercase()), it[1].toInt())
-            println(fold)
-            fold
+        .filterNot { it.isEmpty() }
+        .map {
+            Paper.Fold(valueOf(it[0].trim().uppercase()), it[1].toInt())
         }
+    println("Parsed ${dots.size} dots, ${folds.size} folds")
     return Pair(dots, folds)
 }
 
@@ -59,14 +60,14 @@ class Paper(val dots: List<Point>, private val width: Int, private val height: I
             }.filterNotNull()
             .toList()
 
-        print("$width, $height --> ")
+//        print("$width, $height --> ")
 
         val (newWidth, newHeight) = when (fold.axis) {
             X -> fold.value to height
             Y -> width to fold.value
         }
 
-        println("$newWidth, $newHeight")
+//        println("$newWidth, $newHeight")
 
         return Paper(foldedDots, newWidth, newHeight)
     }
