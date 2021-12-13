@@ -28,7 +28,7 @@ internal class Day13FoldingKtTest {
         """.trimIndent().split("\n")
 
         val (points, folds) = parseFoldInput(inputLines)
-        val paper = foldPaper(points, folds)
+        val paper = foldPaper(points, folds.subList(0,2))
         println(paper.toVisualString())
     }
 }

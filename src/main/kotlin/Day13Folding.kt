@@ -3,7 +3,7 @@ import Paper.Fold.Axis.*
 fun main() {
     val lines = readInput("Day13")
     val (dots, folds) = parseFoldInput(lines)
-    println("Part 1: ${foldPaper(dots, folds.subList(0,1)).dots.count()}")
+    println("Part 1: ${foldPaper(dots, folds.subList(0, 1)).dots.count()}")
     println("Part 2: \n${foldPaper(dots, folds).toVisualString()}")
 }
 
@@ -39,47 +39,38 @@ class Paper(val dots: List<Point>, private val width: Int, private val height: I
     fun fold(fold: Fold): Paper {
 
         fun foldFunction(
-            f_dots: List<Point>,
             f_point: Point,
-            width: Int,
-            height: Int,
-            f_getAxisValue: (Point) -> Int,
-            f_createPoint: (Point, width: Int, height: Int) -> Point
+            getAxisValue: (Point) -> Int,
+            createPoint: (Point) -> Point
         ): Point? =
-            if (f_getAxisValue(f_point) > fold.value) {
-                val newPoint = f_createPoint(f_point, width, height)
-                if (f_dots.contains(newPoint)) null else newPoint
-            } else f_point
+            when {
+                getAxisValue(f_point) > fold.value -> {
+                    val newPoint = createPoint(f_point)
+                    if (dots.contains(newPoint)) null else newPoint
+                }
+                else -> f_point
+            }
 
         val foldedDots = dots.asSequence()
             .map { point ->
                 when (fold.axis) {
-                    X -> foldFunction(dots, point, width, height, { it.x }, { pnt, width, _ -> Point(width - pnt.x, pnt.y) })
-                    Y -> foldFunction(dots, point, width, height, { it.y }, { pnt, _, height -> Point(pnt.x, height - pnt.y) })
+                    X -> foldFunction(point, { it.x }, { pnt -> Point(fold.value - (pnt.x - fold.value), pnt.y) })
+                    Y -> foldFunction(point, { it.y }, { pnt -> Point(pnt.x, fold.value - (pnt.y - fold.value)) })
                 }
             }.filterNotNull()
             .toList()
-
-//        print("$width, $height --> ")
 
         val (newWidth, newHeight) = when (fold.axis) {
             X -> fold.value to height
             Y -> width to fold.value
         }
 
-//        println("$newWidth, $newHeight")
-
         return Paper(foldedDots, newWidth, newHeight)
     }
 
     fun toVisualString(): String {
-        println(dots.filter { it.x < 0 || it.y < 0 })
-//        val paper = MutableList(height+1) { MutableList(width+1) { "." } }
-//        dots.forEach { (x, y) -> paper[y][x] = "#" }
-//        return paper.joinToString("") { it.joinToString("", postfix = "\n") }
-
-        return List(height+1) { y ->
-            List(width+1) { x ->
+        return List(height) { y ->
+            List(width) { x ->
                 if (dots.contains(Point(x, y))) "#" else "."
             }
         }
