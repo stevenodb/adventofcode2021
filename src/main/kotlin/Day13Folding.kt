@@ -8,10 +8,7 @@ fun main() {
 }
 
 fun foldPaper(dots: List<Point>, folds: List<Paper.Fold>): Paper {
-    val width = dots.maxOfOrNull { it.x } ?: 0
-    val height = dots.maxOfOrNull { it.y } ?: 0
-
-    var paper = Paper(dots, width, height)
+    var paper = Paper(dots)
     folds.forEach { fold ->
         paper = paper.fold(fold)
     }
@@ -34,7 +31,11 @@ internal fun parseFoldInput(lines: List<String>): Pair<List<Point>, List<Paper.F
     return Pair(dots, folds)
 }
 
-class Paper(val dots: List<Point>, private val width: Int, private val height: Int) {
+class Paper(val dots: List<Point>) {
+    private val width: Int
+        get() = dots.maxOfOrNull { it.x }?.plus(1) ?: 0
+    private val height: Int
+        get() = dots.maxOfOrNull { it.y }?.plus(1) ?: 0
 
     fun fold(fold: Fold): Paper {
 
@@ -60,12 +61,7 @@ class Paper(val dots: List<Point>, private val width: Int, private val height: I
             }.filterNotNull()
             .toList()
 
-        val (newWidth, newHeight) = when (fold.axis) {
-            X -> fold.value to height
-            Y -> width to fold.value
-        }
-
-        return Paper(foldedDots, newWidth, newHeight)
+        return Paper(foldedDots)
     }
 
     fun toVisualString(): String {
