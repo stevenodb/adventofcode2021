@@ -67,7 +67,7 @@ class Paper(val dots: List<Point>) {
     fun toVisualString(): String {
         return List(height) { y ->
             List(width) { x ->
-                if (dots.contains(Point(x, y))) "#" else "."
+                if (dots.contains(Point(x, y))) "█" else " "
             }
         }
             .joinToString("") { it.joinToString("", postfix = "\n") }
