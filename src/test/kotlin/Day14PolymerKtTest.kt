@@ -1,4 +1,6 @@
 import org.junit.jupiter.api.Test
+import strikt.api.expectThat
+import strikt.assertions.isEqualTo
 
 internal class Day14PolymerKtTest {
     @Test
@@ -25,6 +27,6 @@ internal class Day14PolymerKtTest {
             """.trimIndent().split("\n")
 
         val (polymer, insertPatterns) = parsePolymerInput(input)
-        println(polymerInsertion(polymer, insertPatterns, 10))
+        expectThat(polymerInsertion(polymer, insertPatterns, 10).lowHigh().let { it.second - it.first }).isEqualTo(1588uL)
     }
 }

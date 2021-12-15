@@ -24,7 +24,6 @@ fun frequencies(
     insertPatterns: Map<PolymerPair, Char>,
     cache: MutableMap<Pair<PolymerPair, Int>, FrequencyMap>
 ): FrequencyMap {
-    println(iterationsLeft)
     if (iterationsLeft == 0) return FrequencyMap(pair)
     val insert = insertPatterns[pair] ?: return FrequencyMap(pair)
     val (first, second) = pair.split(insert)
