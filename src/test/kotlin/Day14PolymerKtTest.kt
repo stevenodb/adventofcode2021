@@ -25,10 +25,6 @@ internal class Day14PolymerKtTest {
             """.trimIndent().split("\n")
 
         val (polymer, insertPatterns) = parsePolymerInput(input)
-        var workingPolymer = polymer
-        repeat(4) {
-            workingPolymer = polymerInsertion(workingPolymer, insertPatterns)
-            println(workingPolymer)
-        }
+        println(polymerInsertion(polymer, insertPatterns, 10))
     }
 }

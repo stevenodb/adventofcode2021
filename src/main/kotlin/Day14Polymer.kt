@@ -2,59 +2,86 @@ fun main() {
     val input = readInput("Day14")
     val (polymer, inserts) = parsePolymerInput(input)
 
-    var wipPolymer = polymer
-    repeat(10) {
-        wipPolymer = polymerInsertion(wipPolymer, inserts)
-//        println("Step $it: ${wipPolymer.length}")
+    val lowHigh_10 = polymerInsertion(polymer, inserts, 10).lowHigh()
+    val lowHigh_40 = polymerInsertion(polymer, inserts, 40).lowHigh()
+    println("Part1: ${lowHigh_10.second - lowHigh_10.first}")
+    println("Part2: ${lowHigh_40.second - lowHigh_40.first}")
+}
+
+fun polymerInsertion(polymer: String, insertPatterns: Map<PolymerPair, Char>, iterations: Int): FrequencyMap {
+    val pairs = polymer.windowed(2, step = 1).map { PolymerPair(it[0], it[1]) }
+    val cache = PolymerCache()
+    val frequencyMap = pairs
+        .map { frequencies(it, iterations, insertPatterns, cache) }
+        .reduce { acc, frequencyMap -> acc + frequencyMap }
+    val inserts = pairs.subList(0, pairs.size - 1).map { it.second }
+    return inserts.fold(frequencyMap) { acc, c -> acc.minus(c) }
+}
+
+fun frequencies(
+    pair: PolymerPair,
+    iterationsLeft: Int,
+    insertPatterns: Map<PolymerPair, Char>,
+    cache: MutableMap<Pair<PolymerPair, Int>, FrequencyMap>
+): FrequencyMap {
+    println(iterationsLeft)
+    if (iterationsLeft == 0) return FrequencyMap(pair)
+    val insert = insertPatterns[pair] ?: return FrequencyMap(pair)
+    val (first, second) = pair.split(insert)
+
+    val firstResult = cache[first to iterationsLeft] ?: frequencies(first, iterationsLeft - 1, insertPatterns, cache)
+    val secondResult = cache[second to iterationsLeft] ?: frequencies(second, iterationsLeft - 1, insertPatterns, cache)
+
+    val result = firstResult + secondResult - insert
+
+    cache[first to iterationsLeft] = firstResult
+    cache[second to iterationsLeft] = secondResult
+    return result
+}
+
+data class PolymerPair(val first: Char, val second: Char) {
+    fun split(insert: Char): Pair<PolymerPair, PolymerPair> {
+        return PolymerPair(first, insert) to PolymerPair(insert, second)
+    }
+}
+
+class PolymerCache : LinkedHashMap<Pair<PolymerPair, Int>, FrequencyMap>()
+
+class FrequencyMap(initMap: Map<Char, ULong>) : /*MutableMap<Char, ULong>,*/ HashMap<Char, ULong>(initMap) {
+
+    constructor(polymerPair: PolymerPair) : this(mutableMapOf()) {
+        listOf(polymerPair.first to 1uL, polymerPair.second to 1uL).forEach {
+            this.merge(it.first, it.second) { v1, v2 -> v1 + v2 }
+        }
     }
 
-    val sortedFreq = wipPolymer.frequency().entries.sortedByDescending { it.value }
-    println("Part 1: ${sortedFreq.first().value - sortedFreq.last().value}")
+    operator fun plus(otherMap: FrequencyMap): FrequencyMap {
+        return FrequencyMap(this.toMutableMap().apply {
+            otherMap.forEach { other ->
+                merge(other.key, other.value) { val1, val2 -> val1 + val2 }
+            }
+        })
+    }
+
+    operator fun minus(insert: Char): FrequencyMap {
+        return FrequencyMap(
+            toMutableMap().apply {
+                get(insert)?.minus(1uL)?.let {
+                    put(insert, it)
+                }
+            }
+        )
+    }
+
+    fun lowHigh(): Pair<ULong, ULong> {
+        return entries.minByOrNull { it.value }!!.value to entries.maxByOrNull { it.value }!!.value
+    }
 }
 
-private fun String.frequency(): Map<Char, ULong> {
-    val frequencyMap = mutableMapOf<Char, ULong>()
-    this.forEach { frequencyMap[it] = (frequencyMap[it] ?: 0uL) + 1uL }
-    return frequencyMap
-}
-
-internal fun parsePolymerInput(lines: List<String>): Pair<String, List<InsertPattern>> {
+internal fun parsePolymerInput(lines: List<String>): Pair<String, Map<PolymerPair, Char>> {
     val polymer = lines[0]
     val insertPatterns = lines.subList(lines.indexOf("") + 1, lines.size)
         .map { line -> line.replace(" ", "").split("->") }
-        .map { InsertPattern(it[0], it[1]) }
+        .associate { Pair(PolymerPair(it[0][0], it[0][1]), it[1].first()) }
     return polymer to insertPatterns
-}
-
-internal fun polymerInsertion(polymer: String, insertPatterns: List<InsertPattern>): String {
-    val insertPairs =
-        insertPatterns.flatMap { insert ->
-            polymer
-                .indexesOf(insert.pattern)
-                .map { Insert(it, insert.value) }
-        }
-    var newPolymer = polymer
-    insertPairs
-        .sortedByDescending { it.afterIndex }
-        .forEach { insert ->
-            newPolymer =
-                newPolymer.substring(0..insert.afterIndex) + insert.value + newPolymer.substring(insert.afterIndex + 1..newPolymer.lastIndex)
-        }
-    return newPolymer
-}
-
-private fun String?.indexesOf(str: String): List<Int> {
-    return this?.mapIndexed { startIndex, _ ->
-        val endIndex = startIndex + str.length
-        when {
-            endIndex > this.length -> null
-            this.substring(startIndex, endIndex) == str -> startIndex
-            else -> null
-        }
-    }?.filterNotNull()?.toList() ?: listOf()
-}
-
-data class InsertPattern(val pattern: String, val value: String)
-
-data class Insert(val afterIndex: Int, val value: String) {
 }
