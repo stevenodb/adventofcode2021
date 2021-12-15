@@ -2,10 +2,10 @@ fun main() {
     val input = readInput("Day14")
     val (polymer, inserts) = parsePolymerInput(input)
 
-    val lowHigh_10 = polymerInsertion(polymer, inserts, 10).lowHigh()
-    val lowHigh_40 = polymerInsertion(polymer, inserts, 40).lowHigh()
-    println("Part1: ${lowHigh_10.second - lowHigh_10.first}")
-    println("Part2: ${lowHigh_40.second - lowHigh_40.first}")
+    val lowhigh10 = polymerInsertion(polymer, inserts, 10).lowHigh()
+    val lowhigh40 = polymerInsertion(polymer, inserts, 40).lowHigh()
+    println("Part1: ${lowhigh10.second - lowhigh10.first}")
+    println("Part2: ${lowhigh40.second - lowhigh40.first}")
 }
 
 fun polymerInsertion(polymer: String, insertPatterns: Map<PolymerPair, Char>, iterations: Int): FrequencyMap {
