@@ -45,7 +45,7 @@ private fun step(octoField: OctoField): Pair<Int, Boolean> {
     return Pair(flashCount, octoField.isSynchroFlash())
 }
 
-class OctoField(lines: List<String>) {
+private class OctoField(lines: List<String>) {
     private val octoField: List<List<Octo>> = parseInput(lines)
 
     fun isSynchroFlash(): Boolean = octoField.all { row -> row.all { octo -> octo.hasFlashed() } }
@@ -112,5 +112,3 @@ class OctoField(lines: List<String>) {
         }
     }
 }
-
-data class Point(val x: Int, val y: Int)
